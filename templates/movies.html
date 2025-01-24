@@ -125,9 +125,8 @@
                                     <span aria-hidden="true">&times;</span>
                                 </button>
                             </div>
-                            <div class="modal-body">
+                            {% comment %} <div class="modal-body">
                                 <div class="container-fluid">
-
 
                                     {% for i in cin %}
                                     <div class="row">
@@ -144,10 +143,26 @@
                                         </div>  
                                     </div>
                                     {% endfor %}
+                                </div>
+                            </div> {% endcomment %}
 
-                                    
+                            <!-- Date selector and dynamic showtimes -->
+                        <div class="modal-body">
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <div class="col-12 mb-4">
+                                        <label for="show-date">Select Date:</label>
+                                        <input type="date" id="show-date" class="form-control" />
+                                    </div>
+                                </div>
+
+                                <div id="showtimes-container">
+                                    <!-- Dynamically updated showtimes will be displayed here -->
+                                    <p>Please select a date to view available showtimes.</p>
                                 </div>
                             </div>
+                        </div>
+
                         </div>
                     </div>
 
@@ -213,3 +228,40 @@
     </script>
 
     {% endblock %}
+
+    {% block Script2%}
+
+    <script>
+        document.getElementById("show-date").addEventListener("change", function () {
+            const selectedDate = this.value;
+            const movieId = "{{ movies.movie }}"; // Pass the movie ID to the backend
+            const url = "{% url 'fetch_shows' %}"; // Define the URL for the AJAX request
+    
+            // Send an AJAX request to fetch showtimes for the selected date
+            fetch(`${url}?date=${selectedDate}&movie_id=${movieId}`)
+                .then((response) => response.json())
+                .then((data) => {
+                    const container = document.getElementById("showtimes-container");
+                    container.innerHTML = ""; // Clear existing showtimes
+    
+                    if (data.shows.length > 0) {
+                        data.shows.forEach((show) => {
+                            const showtime = document.createElement("h5");
+                            showtime.className = "time";
+                            showtime.innerHTML = `
+                                <a href="/seat/${show.shows}" class="badge badge-primary">${show.time}</a>
+                            `;
+                            container.appendChild(showtime);
+                        });
+                    } else {
+                        container.innerHTML = "<p>No shows available for this date.</p>";
+                    }
+                })
+                .catch((error) => {
+                    console.error("Error fetching showtimes:", error);
+                    document.getElementById("showtimes-container").innerHTML =
+                        "<p>An error occurred while fetching showtimes. Please try again later.</p>";
+                });
+        });
+    </script>
+{% endblock%}    

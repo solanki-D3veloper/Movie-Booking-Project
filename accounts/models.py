@@ -30,16 +30,27 @@ class Movie(models.Model):
     def __str__(self):
         return self.movie_name
 
+# class Shows(models.Model):
+#     shows=models.AutoField(primary_key=True)
+#     cinema=models.ForeignKey('Cinema',on_delete=models.CASCADE, related_name='cinema_show')
+#     movie=models.ForeignKey('Movie',on_delete=models.CASCADE, related_name='movie_show')
+#     time=models.CharField(max_length=100)
+#     date=models.CharField(max_length=15, default="")
+#     price=models.IntegerField()
+
+#     def __str__(self):
+#         return self.cinema.cinema_name +" | "+ self.movie.movie_name +" | "+ self.time
+
 class Shows(models.Model):
-    shows=models.AutoField(primary_key=True)
-    cinema=models.ForeignKey('Cinema',on_delete=models.CASCADE, related_name='cinema_show')
-    movie=models.ForeignKey('Movie',on_delete=models.CASCADE, related_name='movie_show')
-    time=models.CharField(max_length=100)
-    date=models.CharField(max_length=15, default="")
-    price=models.IntegerField()
+    shows = models.AutoField(primary_key=True)
+    cinema = models.ForeignKey('Cinema', on_delete=models.CASCADE, related_name='cinema_show')
+    movie = models.ForeignKey('Movie', on_delete=models.CASCADE, related_name='movie_show')
+    time = models.CharField(max_length=100)
+    date = models.DateField()  # Changed to DateField
+    price = models.IntegerField()
 
     def __str__(self):
-        return self.cinema.cinema_name +" | "+ self.movie.movie_name +" | "+ self.time
+        return self.cinema.cinema_name + " | " + self.movie.movie_name + " | " + self.time
 
 class Bookings(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)

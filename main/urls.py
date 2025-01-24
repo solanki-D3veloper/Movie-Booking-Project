@@ -10,5 +10,7 @@ urlpatterns=[
     path('seat/<int:id>',views.seat,name='seat'),
     path('booked',views.booked,name='booked'),
     path('ticket/<int:id>',views.ticket,name='ticket'),
+    path('fetch-shows/', views.fetch_shows, name='fetch_shows'),
+
 
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

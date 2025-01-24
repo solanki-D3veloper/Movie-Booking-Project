@@ -10,8 +10,9 @@
 }
 
 .s1 {
-    background-image: url(../images/1.jpg);
+    background-image: url(../images/p1.jpg);
     height: 600px;
+    background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
@@ -24,9 +25,10 @@
     background-size: cover;
 }
 .s3 {
-    background-image: url(../images/3.jpg);
+    background-image: url(../images/game.jpg);
     height: 600px;
-    background-position: center;
+    background-size: cover;
+    background-position: top center;
     background-repeat: no-repeat;
     background-size: cover;
 }
@@ -38,8 +40,9 @@
     background-size: cover;
 }
 .s5 {
-    background-image: url(../images/5.jpg);
+    background-image: url(../images/d10.jpg);
     height: 600px;
+    background-size: cover;
     background-position: -10px -150px;
     background-repeat: no-repeat;
     background-size: cover;

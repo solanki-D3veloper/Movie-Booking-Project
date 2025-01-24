@@ -4,7 +4,10 @@ from django.core.files.storage import FileSystemStorage
 import qrcode
 from io import BytesIO
 from django.conf import settings
+from datetime import datetime
 import os
+from django.http import JsonResponse
+from . import models
 
 # Create your views here.
 
@@ -21,10 +24,12 @@ def movies(request, id):
     movies = Movie.objects.get(movie=id)
     cin = Cinema.objects.filter(cinema_show__movie=movies).prefetch_related('cinema_show').distinct()  # get all cinema
     show = Shows.objects.filter(movie=id)
+    date = Shows.objects.filter(movie=id)
     context = {
         'movies':movies,
         'show':show,
         'cin':cin,
+        'date':date,
     }
     return render(request, "movies.html", context )
 
@@ -72,3 +77,23 @@ def ticket(request, id):
     image_url = os.path.join(settings.MEDIA_URL, "tmp", filename).replace('\\', '/')
 
     return render(request,"ticket.html", {'ticket':ticket,'qr_image_url': image_url, 'total_amount':amount})
+
+def fetch_shows(request):
+    date = request.GET.get('date')
+    movie_id = request.GET.get('movie_id')
+
+    if date and movie_id:
+        # Use filter() to get multiple shows for the selected date and movie
+        shows = Shows.objects.filter(date=date, movie_id=movie_id)
+        show_data = [
+            {
+                'shows': show.shows,  # Show ID
+                'time': show.time,  # Show time
+                'cinema_name': show.cinema.cinema_name,  # Cinema name
+            }
+            for show in shows
+        ]
+        return JsonResponse({'shows': show_data}, safe=False)
+
+    # Return an empty list if no shows are found
+    return JsonResponse({'shows': []}, safe=False)
